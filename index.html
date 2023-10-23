@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body
+    style="background-color: #151515; display: flex; justify-content: center"
+  >
+    <p id="area" style="width: 13em; display: flex; flex-direction: column">
+      <input id="text-box" value="wahidislamlinad" style="margin-top: 2em" />
+      <button
+        id="button"
+        type=""
+        style="border: none; border-radius: 5px; margin-top: 1em"
+      >
+        Click here to generate
+      </button>
+    </p>
+  </body>
+  <script>
+    const area = document.querySelector("#area");
+    const pixel = 128;
+
+    const canvas = document.createElement("canvas");
+    const canvas_context = canvas.getContext("2d");
+    (canvas.width = pixel * 7), (canvas.height = pixel * 7);
+    area.prepend(canvas);
+
+    document.querySelector("#button").addEventListener("click", function () {
+      canvas_context.clearRect(0, 0, canvas.width, canvas.height);
+
+      let s = document.querySelector("#text-box").value;
+      for (s, r = 1, i = 28 + s.length; i--; ) {
+        // xorshift32
+        (r ^= r << 13), (r ^= r >>> 17), (r ^= r << 5);
+        const X = i & 3,
+          Y = i >> 2;
+        if (i >= 28) {
+          // seed state
+          r += s.charCodeAt(i - 28);
+          canvas_context.fillStyle =
+            "#" + ((r >> 8) & 0xffffff).toString(16).padStart(0, 6);
+        } else {
+          // draw pixel
+          if (r >>> 29 > (X * X) / 3 + Y / 2)
+            canvas_context.fillRect(
+              pixel * 3 + pixel * X,
+              pixel * Y,
+              pixel,
+              pixel
+            ),
+              canvas_context.fillRect(
+                pixel * 3 - pixel * X,
+                pixel * Y,
+                pixel,
+                pixel
+              );
+        }
+      }
+      // Create a download link
+      // const dataURL = canvas.toDataURL('image/png');
+      // const downloadLink = document.createElement('a');
+      // downloadLink.href = dataURL;
+      // downloadLink.download = 'canvas_image.png';
+      // downloadLink.click();
+    });
+  </script>
+</html>
