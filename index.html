@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title></title>
@@ -8,8 +8,12 @@
   <body
     style="background-color: #151515; display: flex; justify-content: center"
   >
-    <p id="area" style="width: 13em; display: flex; flex-direction: column">
-      <input id="text-box" placeholder="Enter username here" style="margin-top: 2em" />
+    <form id="area" style="width: 13em; display: flex; flex-direction: column">
+      <input
+        id="text-box"
+        placeholder="Enter username here"
+        style="margin-top: 2em"
+      />
       <button
         id="button"
         type=""
@@ -17,7 +21,7 @@
       >
         Click here to generate
       </button>
-    </p>
+    </form>
   </body>
   <script>
     const area = document.querySelector("#area");
@@ -28,7 +32,8 @@
     (canvas.width = pixel * 7), (canvas.height = pixel * 7);
     area.prepend(canvas);
 
-    document.querySelector("#button").addEventListener("click", function () {
+    area.addEventListener("submit", (e) => {
+      e.preventDefault();
       canvas_context.clearRect(0, 0, canvas.width, canvas.height);
 
       let s = document.querySelector("#text-box").value;
@@ -41,6 +46,7 @@
           // seed state
           r += s.charCodeAt(i - 28);
           canvas_context.fillStyle =
+            // determine color
             "#" + ((r >> 8) & 0xffffff).toString(16).padStart(0, 6);
         } else {
           // draw pixel
@@ -49,13 +55,13 @@
               pixel * 3 + pixel * X,
               pixel * Y,
               pixel,
-              pixel
+              pixel,
             ),
               canvas_context.fillRect(
                 pixel * 3 - pixel * X,
                 pixel * Y,
                 pixel,
-                pixel
+                pixel,
               );
         }
       }
